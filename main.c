@@ -1,58 +1,73 @@
-#include <stdio.h>
 
-#define max 10
+#include<stdio.h>
+#include<conio.h>
 
-int a[11] = { 10, 14, 19, 26, 27, 31, 33, 35, 42, 44, 0 };
-int b[10];
+#define MAX_SIZE 5
 
-void merging(int low, int mid, int high) {
-   int l1, l2, i;
+void heap_sort();
 
-   for(l1 = low, l2 = mid + 1, i = low; l1 <= mid && l2 <= high; i++) {
-      if(a[l1] <= a[l2])
-         b[i] = a[l1++];
-      else
-         b[i] = a[l2++];
-   }
-
-    while(l1 <= mid)
-      b[i++] = a[l1++];
-
-   while(l2 <= high)
-      b[i++] = a[l2++];
-
-   for(i = low; i <= high; i++)
-      a[i] = b[i];
-}
-
-void sort(int low, int high) {
-   int mid;
-
-   if(low < high) {
-      mid = (low + high) / 2;
-      sort(low, mid);
-      sort(mid+1, high);
-      merging(low, mid, high);
-   } else {
-      return;
-   }
-}
+void heap_adjust(int, int);
+int arr_sort[MAX_SIZE], t, a;
 
 int main() {
-   int i;
+  int i;
 
-   printf("List before sorting\n");
+  printf("Simple Heap Sort Example - Functions and Array\n");
+  printf("\nEnter %d Elements for Sorting\n", MAX_SIZE);
+  for (i = 0; i < MAX_SIZE; i++)
+    scanf("%d", &arr_sort[i]);
 
-   for(i = 0; i <= max; i++)
-      printf("%d ", a[i]);
+  printf("\nYour Data   :");
+  for (i = 0; i < MAX_SIZE; i++) {
+    printf("\t%d", arr_sort[i]);
+  }
 
-   sort(0, max);
+  heap_sort();
 
-   printf("\nList after sorting\n");
+  printf("\n\nSorted Data :");
+  for (i = 0; i < MAX_SIZE; i++) {
+    printf("\t%d", arr_sort[i]);
+  }
 
-   for(i = 0; i <= max; i++)
-      printf("%d ", a[i]);
+  getch();
+
 }
 
+void heap_sort() {
+  for (int i = MAX_SIZE / 2 - 1; i >= 0; i--)
+    heap_adjust(MAX_SIZE, i);
+
+  for (int i = MAX_SIZE - 1; i >= 0; i--) {
+
+    t = arr_sort[0];
+    arr_sort[0] = arr_sort[i];
+    arr_sort[i] = t;
+    heap_adjust(i, 0);
+
+    printf("\nHeap Sort Iteration %d : ", i);
+    for (a = 0; a < MAX_SIZE; a++) {
+      printf("\t%d", arr_sort[a]);
+    }
+  }
+}
+
+void heap_adjust(int n, int i) {
+  int large = i, left = 2 * i + 1, right = 2 * i + 2;
 
 
+  if (left < n && arr_sort[left] > arr_sort[large])
+    large = left;
+
+
+  if (right < n && arr_sort[right] > arr_sort[large])
+    large = right;
+
+
+  if (large != i) {
+
+    t = arr_sort[i];
+    arr_sort[i] = arr_sort[large];
+    arr_sort[large] = t;
+    heap_adjust(n, large);
+  }
+}
